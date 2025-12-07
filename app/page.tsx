@@ -12,9 +12,6 @@ const Home = () => {
       <p className="text-center mt-5">
         Hackathons, Meetups, and Conferences, All in One Place
       </p>
-
-      <p>Join us</p>
-
       <ExploreBtn />
 
       <div className="mt-20 space-y-7">

@@ -1,59 +1,53 @@
-// import { Event } from "@/database";
-// import connectDB from "@/lib/mongodb";
-// import { NextRequest, NextResponse } from "next/server";
+import connectDB from "@/lib/mongodb";
+import { NextRequest, NextResponse } from "next/server";
+import Event from "@/database/event.model";
 
-// type RouteParams = {
-//   params: Promise<{ slug: string }>;
-// };
+type RouteParams = {
+  params: Promise<{ slug: string }>;
+};
 
-// export async function GET(
-//   req: NextRequest,
-//   { params }: RouteParams
-// ): Promise<NextResponse> {
-//   try {
-//     await connectDB();
+export async function GET(
+  req: NextRequest,
+  { params }: RouteParams
+): Promise<NextResponse> {
+  try {
+    await connectDB();
 
-//     const { slug } = await params;
+    const { slug } = await params;
 
-//     if (!slug || typeof slug !== "string" || slug.trim() === "") {
-//       return NextResponse.json(
-//         { message: "Invalid or missing slug parameter" },
-//         { status: 400 }
-//       );
-//     }
+    if (!slug || typeof slug !== "string" || slug.trim() === "") {
+      return NextResponse.json(
+        { message: "Invalid or missing slug parameter" },
+        { status: 400 }
+      );
+    }
 
-//     const sanitazedSlug = slug.trim().toLowerCase();
+    const sanitizedSlug = slug.trim().toLowerCase();
 
-//     const event = await Event.findOne({ slug: sanitazedSlug }).lean();
+    const event = await Event.findOne({ slug: sanitizedSlug }).lean();
 
-//     if (!event) {
-//       return NextResponse.json(
-//         { message: `Event with slug '${sanitazedSlug}' not found` },
-//         { status: 404 }
-//       );
-//     }
+    if (!event) {
+      return NextResponse.json(
+        {
+          message: `Event with slug '${sanitizedSlug}' not found`,
+          event: null,
+        },
+        { status: 404 }
+      );
+    }
 
-//     return NextResponse.json(
-//       { message: "Event fetched successfully" },
-//       { status: 200 }
-//     );
-//   } catch (error: unknown) {
-//     if (process.env.NODE_ENV === "development") {
-//       console.error("Error fetching event by slug:", error);
-//     }
-
-//     if (error instanceof Error) {
-//       if (error.message.includes("MONGODB_URI")) {
-//         return NextResponse.json(
-//           { message: "Database configuration error" },
-//           { status: 500 }
-//         );
-//       }
-
-//       return NextResponse.json(
-//         { message: "An unexpected error occurred" },
-//         { status: 500 }
-//       );
-//     }
-//   }
-// }
+    return NextResponse.json(
+      {
+        message: "Event fetched successfully",
+        event, // ✅ E SAD FRONT MOŽE DA RADI const { event } = await res.json()
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("REAL ERROR:", error);
+    return NextResponse.json(
+      { message: "Internal server error", error: String(error) },
+      { status: 500 }
+    );
+  }
+}

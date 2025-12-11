@@ -9,7 +9,9 @@ const Home = async () => {
   "use cache";
   cacheLife("hours");
 
-  const res = await fetch(`${BASE_URL}/api/events`);
+  const res = await fetch(`${BASE_URL}/api/events`, {
+    cache: "no-store", // ili revalidate ako SSR
+  });
   const { events } = await res.json();
 
   return (

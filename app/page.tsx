@@ -19,7 +19,7 @@ const Home = async () => {
         Event You Can’t Miss
       </h1>
       <p className="text-center mt-5">
-        Hackathons, Meetups, and Conferences, All in One Place
+        Hackathons, Meetups, and Conferences, All in One Place!
       </p>
       <ExploreBtn />
 
